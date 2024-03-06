@@ -1,0 +1,31 @@
+\section{Poisson Distribution}
+
+In this section, we look at Question 1
+where we want to create a function for the Poisson distribution given by
+\[ P_{\lambda}(k)=\frac{\lambda^k e^{-\lambda}}{k!}. \]
+The problem with this is that when \( k \) is large, we get an overflow while
+computing it.
+Hence, we must find another way of doing this.
+
+One method is to convert everything in logarithmic space (logspace).
+Taking the natural log of \(P_{\lambda}(k)\), we have
+\[ \ln{(P)} = \ln{(\lambda^k)} + \ln{(e^{-\lambda})} - \ln{(k!)} \]
+\[ \implies \ln{(P)} = k\ln{(\lambda)} - \lambda - \ln{(k!)}. \]
+However, \(k! = \prod_{i=1}^k i\), therefore we can convert it to a sum using
+logspace since multiplication becomes addition:
+\[ \ln{(k!)} = \ln{\left(\prod_{i=1}^k i\right)} = \sum_{i=1}^k\ln{(i)}. \]
+The function \texttt{log\_factorial} below takes the log of each element in the
+product of the factorial, which are later on all summed up.
+Hence, our final formula (see the function
+\texttt{poisson} below) is
+\[ \ln{(P)} = k\ln{(\lambda)} - \lambda - \sum_{i=1}^k\ln{(i)}. \]
+Of course, we need to output it in the normal way, so we convert it back from
+logspace using an exponential.
+
+Our script is given by:
+\lstinputlisting{NUR_handin1_1.py}
+
+Our script produces the following results:
+\lstinputlisting{NUR_handin1_1.txt}
+
+We can see the function works fine and prevents overflows.
