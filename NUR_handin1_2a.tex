@@ -1,0 +1,38 @@
+\section{Vandermonde Matrix}
+
+\subsection*{a) LU Decomposition}
+
+We can perform LU decomposition using Crout's Algorithm.
+We need to express the Vandermonde matrix ($V$) with elements $a_{ij}$, as the product of a lower ($L$) and upper ($U$) matrix, consisting of $\alpha_{ij}$ and $\beta_{ij}$ respectively.
+
+We can set the initial conditions such that $\alpha_{ii} = 1$  and $\beta_{0j} = a_{0j}$.
+We can then decompose the matrix $V$ such that $LU=V$: 
+\[\beta_{ij} = a_{ij} - \sum_{k=0}^{i-1} \alpha_{ik}\beta_{kj} \quad (i \leq j),\]
+\[\alpha_{ij} = \frac{1}{\beta_{jj}} \left(a_{ij} - \sum_{k=0}^{j-1}\alpha_{ik}\beta_{kj}\right) \quad (i > j)\]
+
+These triangular matrices allow us to solve a system of linear equations: 
+\[ V\textbf{x} = \textbf{b} \implies (LU)\textbf{x} = \textbf{b}\]
+\[ \implies L(U\textbf{x}) = \textbf{b} \implies L\textbf{y} = \textbf{b} \]
+We can first solve the equation $L\textbf{y} = \textbf{b}$, through forward substitution:
+\[ y_0 = \frac{b_0}{\alpha_{00}}, \]
+\[ y_i = \frac{1}{\alpha_{ii}} \left(b_i - \sum_{j=0}^{i-1}\alpha_{ij}y_j\right) \]
+Then we are able to perform backward substitution to solve $U\textbf{x}=\textbf{y}$: 
+\[ x_{N-1} = \frac{y_{N-1}}{\beta_{(N-1)(N-1)}}, \]
+\[ x_i = \frac{1}{\beta_{ii}} \left(y_i - \sum_{j = i+1}^{N-1}\beta_{ij}x_j\right) \]
+
+This enables us to evaluate $y$ at any $x$ that we desire.
+We can use this to interpolate 1000 points.
+By generating these points, we can solve the equation $V\textbf{c}=\textbf{y}$, where \textbf{c} is the set of coefficients of the polynomial satisfying our original data.
+The following code performs LU decomposition, forward and backward substitution, and finds the polynomial's coefficients:
+
+\lstinputlisting{NUR_handin1_2a.py}
+
+The polynomial's coefficients, \textbf{c}, are (in order):
+
+\lstinputlisting{c_coeffs.txt}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.9\linewidth]{./plots/my_vandermonde_sol_2a.png}
+  \caption{Polynomial produced via LU decomposition with associated relative error.}
+\end{figure}
